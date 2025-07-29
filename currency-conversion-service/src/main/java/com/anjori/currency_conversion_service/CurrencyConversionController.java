@@ -56,7 +56,6 @@ public class CurrencyConversionController {
         @PathVariable BigDecimal qty
     ){
 
-
         CurrencyConversion currencyConversion = proxy.retrieveExchangeValue(from, to);
         
         return new CurrencyConversion().builder()
@@ -69,4 +68,55 @@ public class CurrencyConversionController {
         .environment(currencyConversion.getEnvironment() + " feign")
         .build();
     }
+
+
+    // @GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{qty}")
+    // public CurrencyConversion calculateCurrencyConversionV2(
+    //     @PathVariable String from,
+    //     @PathVariable String to,
+    //     @PathVariable BigDecimal qty
+    // ){
+
+    //     HashMap<String, String> urivariables = new HashMap<>();
+    //     urivariables.put("from", from);
+    //     urivariables.put("to", to);
+
+    //     ResponseEntity<CurrencyConversion> responseEntity = new RestTemplate().getForEntity
+    //     ("http://localhost:8000/currency-exchange/from/{from}/to/{to}",
+    //      CurrencyConversion.class,
+    //      urivariables);
+
+    //     CurrencyConversion currencyConversion = responseEntity.getBody();
+        
+    //     return new CurrencyConversion().builder()
+    //     .id(10001L)
+    //     .from(from)
+    //     .to(to)
+    //     .conversionMultiple(currencyConversion.getConversionMultiple())
+    //     .quantity(qty)
+    //     .totalCalculatedAmount(qty.multiply(currencyConversion.getConversionMultiple()))
+    //     .environment(currencyConversion.getEnvironment() + " rest")
+    //     .build();
+    // }
+
+    
+    // @GetMapping("/currency-conversion-feign/from/{from}/to/{to}/quantity/{qty}")
+    // public CurrencyConversion calculateCurrencyConversionFeignV2(
+    //     @PathVariable String from,
+    //     @PathVariable String to,
+    //     @PathVariable BigDecimal qty
+    // ){
+
+    //     CurrencyConversion currencyConversion = proxy.retrieveExchangeValue(from, to);
+        
+    //     return new CurrencyConversion().builder()
+    //     .id(10001L)
+    //     .from(from)
+    //     .to(to)
+    //     .conversionMultiple(currencyConversion.getConversionMultiple())
+    //     .quantity(qty)
+    //     .totalCalculatedAmount(qty.multiply(currencyConversion.getConversionMultiple()))
+    //     .environment(currencyConversion.getEnvironment() + " feign")
+    //     .build();
+    // }
 }
