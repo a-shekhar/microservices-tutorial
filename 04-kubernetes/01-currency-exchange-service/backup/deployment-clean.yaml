@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: currency-exchange-service
-        image: ashekharr/currency-exchange-service:0.0.2-Kubernetes
+        image: ashekharr/currency-exchange-service:0.0.1-Kubernetes
         imagePullPolicy: IfNotPresent
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: currency-exchange
+  name: currency-conversion
   namespace: default
   labels:
-    app: currency-exchange
+    app: currency-conversion
 spec:
   replicas: 2
   revisionHistoryLimit: 10
   progressDeadlineSeconds: 600
   selector:
     matchLabels:
-      app: currency-exchange
+      app: currency-conversion
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,12 +20,15 @@ spec:
   template:
     metadata:
       labels:
-        app: currency-exchange
+        app: currency-conversion
     spec:
       containers:
-      - name: currency-exchange-service
-        image: ashekharr/currency-exchange-service:0.0.2-Kubernetes
+      - name: currency-conversion-service
+        image: ashekharr/currency-conversion-service:0.0.2-Kubernetes
         imagePullPolicy: IfNotPresent
+        env:
+          - name: CURRENCY_EXCHANGE_URI
+            value: http://currency-exchange
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
@@ -37,15 +40,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: currency-exchange
+  name: currency-conversion
   namespace: default
   labels:
-    app: currency-exchange
+    app: currency-conversion
 spec:
   type: LoadBalancer
   selector:
-    app: currency-exchange
+    app: currency-conversion
   ports:
-  - port: 8000
-    targetPort: 8000
+  - port: 8100
+    targetPort: 8100
     protocol: TCP
