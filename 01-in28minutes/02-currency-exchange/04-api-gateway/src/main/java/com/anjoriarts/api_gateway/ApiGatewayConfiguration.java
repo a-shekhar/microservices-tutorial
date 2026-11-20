@@ -1,0 +1,33 @@
+package com.anjoriarts.api_gateway;
+
+import org.springframework.cloud.gateway.route.Route;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.Buildable;
+import org.springframework.cloud.gateway.route.builder.PredicateSpec;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.function.Function;
+
+@Configuration
+public class ApiGatewayConfiguration {
+    @Bean
+    public RouteLocator gatewayRouter(RouteLocatorBuilder builder){
+
+        // Demonstration route: add a header and query parameter before calling httpbin.
+        Function<PredicateSpec, Buildable<Route>> routeFunction =
+                p -> p.path("/get")
+                        .filters(f -> f.addRequestHeader("MyHeader", "MyURI")
+                                .addRequestParameter("Param", "MyParam"))
+                        .uri("http://httpbin.org:80");
+        // lb:// resolves service names through discovery; conversion paths are rewritten below.
+        return builder.routes().route(routeFunction).route(
+                p -> p.path("/currency-exchange/**").uri("lb://currency-exchange")
+        ).route(p -> p.path("/currency-conversion-feign/**").uri("lb://currency-conversion"))
+                .route(p -> p.path("/currency-conversion/**")
+                        .filters(f -> f.rewritePath("/currency-conversion/(?<remaining>.*)", "/currency-conversion-feign/${remaining}"))
+                        .uri("lb://currency-conversion"))
+                .build();
+    }
+}
