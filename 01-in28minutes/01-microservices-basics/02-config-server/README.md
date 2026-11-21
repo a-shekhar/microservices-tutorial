@@ -15,6 +15,19 @@ $env:SPRING_CLOUD_CONFIG_SERVER_GIT_URI = 'file:///C:/path/to/config-repository'
 
 Use a valid file URI. If the files are inside a repository subdirectory, set the appropriate Git URI and search path. On macOS or Linux, set the environment variable and run `./mvnw spring-boot:run`. A native filesystem backend is mentioned in application properties but is not enabled by default.
 
+To use a fresh clone of the parent repository as the Git backend, run from the repository root in PowerShell:
+
+```powershell
+$repoFolder = (Resolve-Path '.').Path
+$env:SPRING_CLOUD_CONFIG_SERVER_GIT_URI = ([System.Uri]::new($repoFolder)).AbsoluteUri
+$env:SPRING_CLOUD_CONFIG_SERVER_GIT_SEARCH_PATHS = '01-in28minutes/01-microservices-basics/03-git-local-config'
+$env:SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL = 'main'
+Set-Location '.\01-in28minutes\01-microservices-basics\02-config-server'
+.\mvnw.cmd spring-boot:run
+```
+
+The Git backend serves committed files from the selected branch, not uncommitted working-tree edits. The example assumes that the configuration is committed on `main`. Alternatively, use the native setup below to read the working directory directly.
+
 ## API
 
 ```sh
